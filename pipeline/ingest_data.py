@@ -4,7 +4,8 @@
 import pandas as pd
 from sqlalchemy import create_engine
 from tqdm.auto import tqdm
-
+#to have cli prompts
+import click
 
 
 dtype = {
@@ -44,6 +45,18 @@ def run():
     target_table = 'yellow_taxi_data'
     chunksize = 100000
 
+@click.command()
+@click.option('--pg-user', default='root', help='PostgresSQL username')
+@click.option('--pg-pass', default='root', help='PostgresSQL password')
+@click.option('--pg-host', default='localhost', help='PostgresSQL host')
+@click.option('--pg-port', default='5432', help='PostgresSQL port')
+@click.option('--pg-db', default='ny_taxi', help='PostgresSQL database name')
+@click.option('--year', default=2021, help='Year of the data')
+@click.option('--month', default=1, type=int, help='Month of the data')
+@click.option('--chunksize', default=100000, type=int, help='Chunk size for inggestion')
+@click.option('--target-table', default='yellow_taxi_data', help='Target table name')
+def run(pg_user, pg_pass, pg_host, pg_port, pg_db, year, month, chunksize, target_table):
+    '''Ingest NY taxi data into PostgreSQL database'''
     prefix = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/'
     url = f'{prefix}yellow_tripdata_{year}-{month:02d}.csv.gz'
 
